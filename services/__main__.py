@@ -13,8 +13,8 @@ async def init_app():
     aiohttp_jinja2.setup(
         app, loader=jinja2.PackageLoader('services.dishes')
     )
-    app["pool"] = await init_db()
-
+    await init_db(app)
+    create_tables()
     return app
 
 
