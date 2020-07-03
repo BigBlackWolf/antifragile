@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    {% for item in message %}
-        <div class="row">
-            {{ item.name }}
-        </div>
-    {% endfor %}
-    <a href="/dishes">Назад</a>
+<div class="container">
+    <div class="row row-cols-2">
+        {% for item in message %}
+            <div class="row">
+                <div class="alert alert-primary col-8">
+                    {{ item.name }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <a href="/dishes">
+        <div>Назад</div>
+    </a>
 </div>
 {% endblock %}

@@ -1,21 +1,23 @@
 ## Project structure 
 
 ```
-├── docs
-├── Makefile
 ├── README.md
 ├── requirements.txt
 └── services
     ├── dishes
-    │   ├── dishes
-    │   │   ├── __init__.py
-    │   │   ├── __main__.py
-    │   │   ├── routes.py
-    │   │   ├── templates
-    │   │   │   └── base.html
-    │   │   └── views.py
-    │   ├── setup.py
-    │   └── tests
-    │       └── __init__.py
-    └── __init__.py
+    │   ├── db.py
+    │   ├── __init__.py
+    │   ├── middlewares.py
+    │   ├── routes.py
+    │   ├── settings.py
+    │   ├── templates
+    │   │   ├── base.html
+    │   │   ├── delegate.html
+    │   │   └── index.html
+    │   └── views.py
+    ├── __init__.py
+    ├── __main__.py
+    └── tests
+        ├── __init__.py
+        └── tests.py
 ```

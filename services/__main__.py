@@ -4,10 +4,15 @@ import aiohttp_jinja2
 import logging
 from services.dishes.routes import setup_routes
 from services.dishes.db import init_db, create_tables
+from services.dishes.middlewares import handle_error
+from aiohttp.web_middlewares import normalize_path_middleware
 
 
 async def init_app():
-    app = web.Application()
+    app = web.Application(middlewares=[
+        normalize_path_middleware(append_slash=False, remove_slash=True),
+        handle_error
+    ])
     setup_routes(app)
 
     aiohttp_jinja2.setup(

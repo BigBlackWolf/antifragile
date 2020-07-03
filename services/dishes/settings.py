@@ -7,6 +7,9 @@
 # createuser --interactive
 # createdb -O antifragile_user antifragile
 # sudo -u antifragile_user psql antifragile
+# https://dish.co.nz/recipes/leftover-lamb-ragu-2020
+# https://dish.co.nz/recipes/leftover-lamb-ragu-2020
+# tree -I 'venv|__pycache__|*.pyc|.pytest_cache'
 
 DB_NAME = 'antifragile'
 DB_HOST = 'localhost'

@@ -1,26 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    <div class="container">
-        <div class="row row-cols-2">
-    {% for item in message %}
-        <div class="alert alert-primary col">
-            <a href="/dishes/{{ item.id }}">{{ item.name }}</a>
+<div class="container">
+    <div class="row row-cols-2">
+        {% for item in message %}
+        <div class="alert alert-primary col-8">
+            <a href="/dishes/{{ item.id }}">
+                <div>{{ item.name }}</div>
+            </a>
         </div>
-        <div class="col">
-            <button>Удалить</button>
+        <div class="col-4">
+            <button class="btn btn-primary" onclick="deleteDish({{ item.id }})">Удалить</button>
         </div>
-    {% endfor %}
-        </div>
+        {% endfor %}
     </div>
-    <form action="http://localhost:8080/dishes" method="post" class="form-group">
-        <div class="input-group">
-            <input id="name" name="name" type="text" placeholder="Название блюда" class="form-control">
-            <div class="input-group-append">
-                <input type="submit" class="btn btn-success" value="Отправить">
-            </div>
-        </div>
-    </form>
+    <div class="row">
+            <form action="http://localhost:8080/dishes" method="post" class="form-group">
+                <div class="input-group">
+                    <input id="name" name="name" type="text" placeholder="Название блюда" class="form-control">
+                    <div class="input-group-append">
+                        <input type="submit" class="btn btn-success" value="Отправить">
+                    </div>
+                </div>
+            </form>
+    </div>
 </div>
+<script>
+    function deleteDish(id) {
+        fetch('/dishes/' + id, {
+            method: 'DELETE',
+        })
+            .then(response => console.log(response));
+    }
+</script>
 {% endblock %}

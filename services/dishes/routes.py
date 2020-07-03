@@ -1,10 +1,10 @@
 from aiohttp import web
-from .views import index, delegate
+from .views import index, DelegateView
 
 
 def setup_routes(app):
     resources = [web.get("/dishes", index),
                  web.post("/dishes", index),
-                 web.get(r"/dishes/{dish_id:\d+}", delegate)
+                 web.view(r"/dishes/{dish_id:\d+}", DelegateView),
                  ]
     app.add_routes(resources)
