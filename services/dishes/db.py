@@ -79,10 +79,12 @@ async def get_dishes(conn):
     return result
 
 
-async def insert_dish(conn, data: dict):
-    await conn.execute(
-        dishes.insert().values(**data)
+async def insert_dish(conn, data: dict) -> int:
+    result = await conn.execute(
+        dishes.insert().values(**data).returning(dishes.c.id)
     )
+    inserted_id = await result.fetchone()
+    return inserted_id[0]
 
 
 async def get_single_dish(conn, dish_id):
@@ -92,3 +94,9 @@ async def get_single_dish(conn, dish_id):
     fetched = await records.fetchall()
     result = list(map(lambda x: {"name": x[1], "id": x[0]}, fetched))
     return result
+
+
+async def delete_dish(conn, dish_id):
+    await conn.execute(
+        dishes.delete().where(dishes.c.id == dish_id)
+    )

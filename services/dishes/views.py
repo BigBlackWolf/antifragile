@@ -2,21 +2,22 @@ import aiohttp_jinja2
 from services.dishes import db
 from services.dishes.middlewares import check
 from aiohttp import web
+import json
 
 
-@aiohttp_jinja2.template("index.html")
-async def index(request):
-    if request.method == "POST":
-        form = await request.post()
-        async with request.app["db"].acquire() as conn:
+class IndexView(web.View):
+    @aiohttp_jinja2.template("index.html")
+    async def get(self):
+        async with self.request.app["db"].acquire() as conn:
+            dishes = await db.get_dishes(conn)
+            return {"message": dishes}
+
+    async def post(self):
+        form = await self.request.json()
+        async with self.request.app["db"].acquire() as conn:
             form = dict(form)
-            await db.insert_dish(conn, form)
-            dishes = await db.get_dishes(conn)
-            return {"message": dishes}
-    else:
-        async with request.app["db"].acquire() as conn:
-            dishes = await db.get_dishes(conn)
-            return {"message": dishes}
+            new_dish_id = await db.insert_dish(conn, form)
+            return web.json_response({"message": str(new_dish_id)})
 
 
 @aiohttp_jinja2.template("delegate.html")
@@ -33,7 +34,9 @@ class DelegateView(web.View):
         pass
 
     async def delete(self):
-        return {"message": 1}
+        dish_id = int(self.request.path.split("/")[-1])
+        async with self.request.app["db"].acquire() as conn:
+            await db.delete_dish(conn, dish_id)
 
     async def update(self):
         pass
