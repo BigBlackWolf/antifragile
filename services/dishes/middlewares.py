@@ -9,7 +9,7 @@ async def handle_error(request, handler):
         return await handler(request)
     except Exception as e:
         return aiohttp_jinja2.render_template(
-            "index.html", request, {"message": [{"id": 404, "name": "error"}]}, status=400
+            "error.html", request, {}, status=404
         )
 
 

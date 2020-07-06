@@ -33,7 +33,9 @@ dishes = Table(
 
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("name", String(100), nullable=False, unique=True),
-    Column("add_timestamp", DateTime, nullable=False, default=datetime.utcnow),
+    Column("timestamp", DateTime, nullable=False, default=datetime.utcnow),
+    Column("photo_url", String(255)),
+    Column("recipe", String(1024)),
 )
 
 ingredients = Table(
@@ -72,7 +74,7 @@ def create_tables():
 
 async def get_dishes(conn):
     records = await conn.execute(
-        dishes.select().order_by(dishes.c.add_timestamp)
+        dishes.select().order_by(dishes.c.timestamp)
     )
     fetched = await records.fetchall()
     result = list(map(lambda x: {"name": x[1], "id": x[0]}, fetched))
@@ -92,7 +94,8 @@ async def get_single_dish(conn, dish_id):
         dishes.select().where(dishes.c.id == dish_id)
     )
     fetched = await records.fetchall()
-    result = list(map(lambda x: {"name": x[1], "id": x[0]}, fetched))
+    result = list(map(lambda x: {"id": x[0], "name": x[1], "timestamp": x[2],
+                                 "photo_url": x[3], "recipe": x[4]}, fetched))
     return result
 
 

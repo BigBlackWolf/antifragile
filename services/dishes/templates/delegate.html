@@ -1,18 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="row row-cols-2">
-        {% for item in message %}
-            <div class="row">
-                <div class="alert alert-primary col-8">
-                    {{ item.name }}
-                </div>
+
+{% for item in message %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <p class="text-center h3">{{ item.name }}</p>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <div class="row justify-content-md-center">
+
+            <div class="col-4">
+                <img src="/static/default.jpg" width="300" height="300">
             </div>
-        {% endfor %}
+            <div class="col-8 alert alert-primary">
+                {{ item.recipe }}
+            </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <p class="text-center">asd</p>
+        </div>
+        <div class="col-sm-8">
+            <p class="text-center">asd</p>
+        </div>
     </div>
     <a href="/dishes">
         <div>Назад</div>
     </a>
 </div>
+{% endfor %}
 {% endblock %}

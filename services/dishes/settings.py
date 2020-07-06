@@ -8,11 +8,12 @@
 # createdb -O antifragile_user antifragile
 # sudo -u antifragile_user psql antifragile
 # https://dish.co.nz/recipes/leftover-lamb-ragu-2020
-# https://dish.co.nz/recipes/leftover-lamb-ragu-2020
 # tree -I 'venv|__pycache__|*.pyc|.pytest_cache'
+import pathlib
 
 DB_NAME = 'antifragile'
 DB_HOST = 'localhost'
 DB_PORT = 5432
 DB_USERNAME = 'antifragile_user'
 DB_PASSWORD = 'antifragile_password'
+ROOT_FOLDER = pathlib.Path(__file__).parent.parent
