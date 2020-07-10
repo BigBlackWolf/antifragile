@@ -87,14 +87,12 @@ async def get_single_dish(conn, dish_id):
     )
     fetched = await records.fetchall()
     ingrs = await conn.execute(
-        select(
-            [dishes.c.id, ingredients.c.name,
-             dishes_ingredients.c.quantity
-             ]).select_from(dishes_ingredients
-                            .join(dishes, dishes.c.id == dishes_ingredients.c.dish_id)
-                            .join(ingredients, ingredients.c.id == dishes_ingredients.c.ingredient_id)
-                            ).where(dishes.c.id == dish_id)
-    )
+        select([dishes.c.id, ingredients.c.name,
+                dishes_ingredients.c.quantity
+                ]).select_from(dishes_ingredients
+                               .join(dishes)
+                               .join(ingredients)
+                               ).where(dishes.c.id == dish_id))
     ingrs_fetched = await ingrs.fetchall()
     ing = {}
     for i in ingrs_fetched:
