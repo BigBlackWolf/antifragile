@@ -2,7 +2,8 @@ from aiopg.sa import create_engine
 from datetime import datetime
 from sqlalchemy import (
     Column, Integer, String, Table,
-    DateTime, ForeignKey, MetaData, create_engine as cr
+    DateTime, ForeignKey, MetaData, create_engine as cr,
+    select
 )
 from services.dishes.settings import (
     DB_NAME, DB_HOST, DB_PASSWORD, DB_USERNAME
@@ -33,7 +34,7 @@ dishes = Table(
 
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("name", String(100), nullable=False, unique=True),
-    Column("timestamp", DateTime, nullable=False, default=datetime.utcnow),
+    Column("timestamp", DateTime, default=datetime.utcnow),
     Column("photo_url", String(255)),
     Column("recipe", String(1024)),
 )
@@ -63,15 +64,6 @@ def create_tables():
     METADATA.create_all(engine)
 
 
-# async def get_dishes(conn):
-#     j = dishes.join(recipes, dishes.c.id == recipes.c.dish_id)
-#     records = await conn.execute(
-#         select([dishes.c.name, recipes.c.id]).select_from(j)
-#     )
-#     fetched = await records.fetchall()
-#     result = list(map(lambda x: {"Блюдо": x[0], "Id": x[1]}, fetched))
-#     return result
-
 async def get_dishes(conn):
     records = await conn.execute(
         dishes.select().order_by(dishes.c.timestamp)
@@ -94,8 +86,30 @@ async def get_single_dish(conn, dish_id):
         dishes.select().where(dishes.c.id == dish_id)
     )
     fetched = await records.fetchall()
+    ingrs = await conn.execute(
+        select(
+            [dishes.c.id, ingredients.c.name,
+             dishes_ingredients.c.quantity
+             ]).select_from(dishes_ingredients
+                            .join(dishes, dishes.c.id == dishes_ingredients.c.dish_id)
+                            .join(ingredients, ingredients.c.id == dishes_ingredients.c.ingredient_id)
+                            ).where(dishes.c.id == dish_id)
+    )
+    ingrs_fetched = await ingrs.fetchall()
+    ing = {}
+    for i in ingrs_fetched:
+        print(i)
+        dish_id, ingr, quantity = i[0], i[1], i[2]
+        if ing.get(dish_id, None):
+            ing[dish_id].append({"name": ingr, "quantity": quantity})
+        else:
+            ing[dish_id] = [{"name": ingr, "quantity": quantity}]
+
     result = list(map(lambda x: {"id": x[0], "name": x[1], "timestamp": x[2],
                                  "photo_url": x[3], "recipe": x[4]}, fetched))
+    if ing:
+        for i in result:
+            i["ingredients"] = ing[i["id"]]
     return result
 
 

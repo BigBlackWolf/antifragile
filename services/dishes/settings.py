@@ -9,6 +9,7 @@
 # sudo -u antifragile_user psql antifragile
 # https://dish.co.nz/recipes/leftover-lamb-ragu-2020
 # tree -I 'venv|__pycache__|*.pyc|.pytest_cache'
+# select ingredients.name as ingr, dishes_ingredients.quantity, dishes.name from dishes_ingredients join dishes on dishes_ingredients.dish_id = dishes.id join ingredients on dishes_ingredients.ingredient_id = ingredients.id;
 import pathlib
 
 DB_NAME = 'antifragile'

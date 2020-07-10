@@ -2,11 +2,10 @@
 
 {% block content %}
 
-{% for item in message %}
 <div class="container mt-5">
     <div class="row">
         <div class="col">
-            <p class="text-center h3">{{ item.name }}</p>
+            <p class="text-center h3">{{ message.name }}</p>
         </div>
     </div>
 </div>
@@ -16,24 +15,36 @@
             <div class="col-4">
                 <img src="/static/default.jpg" width="300" height="300">
             </div>
-            <div class="col-8 alert alert-primary">
-                {{ item.recipe }}
+            <div class="col-8 alert alert-primary editable">
+                <p class="text-right">
+                    <i class="fas fa-pen"></i>
+                </p>
+
+                {{ message.recipe }}
             </div>
     </div>
 </div>
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-3">
-            <p class="text-center">asd</p>
+        <div class="col-3 mt-4">
+            <p class="text-center">Ингридиенты</p>
+            <ul class="list-group">
+                {% for ingredient in message.ingredients %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ ingredient.name }}
+                        <span class="badge badge-primary badge-pill">{{ ingredient.quantity }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
-        <div class="col-sm-8">
-            <p class="text-center">asd</p>
+        <div class="col-8 offset-1 mt-4">
+            <p class="text-center">Рецепт</p>
+            <span class="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse molestias non repudiandae ullam. Consequatur debitis deleniti eligendi ex libero nulla perspiciatis quidem quos, repellat sapiente similique soluta, suscipit ullam voluptatum?</span>
         </div>
     </div>
-    <a href="/dishes">
-        <div>Назад</div>
+    <a href="/dishes" class="btn btn-info mt-4">
+        Назад
     </a>
 </div>
-{% endfor %}
 {% endblock %}

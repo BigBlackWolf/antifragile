@@ -27,8 +27,9 @@ class DelegateView(web.View):
     async def get(self):
         dish_id = self.request.match_info["dish_id"]
         async with self.request.app["db"].acquire() as conn:
-            dishes = await db.get_single_dish(conn, dish_id)
-            return {"message": dishes}
+            query = await db.get_single_dish(conn, dish_id)
+            dish = query[0] if len(query) > 0 else {}
+            return {"message": dish}
 
     async def post(self):
         pass
