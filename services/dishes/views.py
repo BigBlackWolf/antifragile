@@ -2,7 +2,6 @@ import aiohttp_jinja2
 from services.dishes import db
 from services.dishes.middlewares import check
 from aiohttp import web
-import json
 
 
 class IndexView(web.View):
@@ -14,10 +13,10 @@ class IndexView(web.View):
 
     async def post(self):
         form = await self.request.json()
+        form = dict(form)
         async with self.request.app["db"].acquire() as conn:
-            form = dict(form)
             new_dish_id = await db.insert_dish(conn, form)
-            return web.json_response({"message": str(new_dish_id)})
+        return web.json_response({"message": str(new_dish_id)})
 
 
 @aiohttp_jinja2.template("delegate.html")
@@ -39,5 +38,10 @@ class DelegateView(web.View):
         async with self.request.app["db"].acquire() as conn:
             await db.delete_dish(conn, dish_id)
 
-    async def update(self):
-        pass
+    async def put(self):
+        form = await self.request.json()
+        form = dict(form)
+        async with self.request.app["db"].acquire() as conn:
+            new_dish_id = await db.update_dish(conn, form)
+            # new_dish_id = await db.update_recipe(conn, form)
+        return web.json_response({"message": str(new_dish_id)})

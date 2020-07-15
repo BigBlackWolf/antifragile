@@ -115,3 +115,25 @@ async def delete_dish(conn, dish_id):
     await conn.execute(
         dishes.delete().where(dishes.c.id == dish_id)
     )
+
+
+async def update_dish(conn, data: dict):
+    dish_id = data.pop("dish_id", -1)
+    await conn.execute(
+        dishes.update()
+            .where(dishes.c.id == dish_id)
+            .values(**data)
+    )
+
+
+async def update_recipe(conn, data: dict):
+    dish_id = data.pop("dish_id", -1)
+    await conn.execute()
+    await conn.execute(
+        dishes_ingredients.update()
+            .values()
+            .where(dishes_ingredients.c.dish_id == dishes.c.id)
+            .where(dishes_ingredients.c.ingredient_id == ingredients.c.id)
+            .where(dishes.c.id == dish_id)
+            .where(ingredients.c.name == data["ingredient"])
+    )
