@@ -42,6 +42,6 @@ class DelegateView(web.View):
         form = await self.request.json()
         form = dict(form)
         async with self.request.app["db"].acquire() as conn:
-            new_dish_id = await db.update_dish(conn, form)
-            # new_dish_id = await db.update_recipe(conn, form)
+            # new_dish_id = await db.update_dish(conn, form)
+            new_dish_id = await db.update_recipe(conn, form)
         return web.json_response({"message": str(new_dish_id)})
