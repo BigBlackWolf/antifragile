@@ -5,7 +5,7 @@ from sqlalchemy import (
     DateTime, ForeignKey, MetaData, create_engine as cr,
     select
 )
-from services.dishes.settings import (
+from settings import (
     DB_NAME, DB_HOST, DB_PASSWORD, DB_USERNAME
 )
 import logging

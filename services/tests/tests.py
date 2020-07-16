@@ -1,5 +1,5 @@
 import pytest
-from services.__main__ import init_app
+from __main__ import init_app
 from multidict import MultiDictProxy, MultiDict
 
 

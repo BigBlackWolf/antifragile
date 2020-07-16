@@ -1,6 +1,8 @@
 from aiohttp import web
 from .views import IndexView, DelegateView
-from services.dishes.settings import ROOT_FOLDER
+import pathlib
+
+ROOT_FOLDER = pathlib.Path(__file__).parent.parent
 
 
 def setup_routes(app):

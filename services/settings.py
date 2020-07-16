@@ -13,8 +13,10 @@
 import pathlib
 
 DB_NAME = 'antifragile'
-DB_HOST = 'localhost'
+DB_HOST = 'database'
 DB_PORT = 5432
 DB_USERNAME = 'antifragile_user'
 DB_PASSWORD = 'antifragile_password'
+APP_HOST = '0.0.0.0'
+APP_PORT = 5000
 ROOT_FOLDER = pathlib.Path(__file__).parent.parent

@@ -1,6 +1,6 @@
 import aiohttp_jinja2
-from services.dishes import db
-from services.dishes.middlewares import check
+from dishes import db
+from dishes.middlewares import check
 from aiohttp import web
 
 
