@@ -37,11 +37,15 @@ class DelegateView(web.View):
         dish_id = int(self.request.path.split("/")[-1])
         async with self.request.app["db"].acquire() as conn:
             await db.delete_dish(conn, dish_id)
+        return web.json_response({"message": "SUCCESS"})
 
     async def put(self):
         form = await self.request.json()
         form = dict(form)
+
         async with self.request.app["db"].acquire() as conn:
-            # new_dish_id = await db.update_dish(conn, form)
-            new_dish_id = await db.update_recipe(conn, form)
+            if "ingredients" in form:
+                new_dish_id = await db.update_dish_ingredients(conn, form)
+            else:
+                new_dish_id = await db.update_dish_details(conn, form)
         return web.json_response({"message": str(new_dish_id)})

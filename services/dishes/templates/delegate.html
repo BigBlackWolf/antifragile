@@ -17,9 +17,11 @@
             </div>
             <div class="col-8 alert-primary editable">
                 <p class="text-right">
-                    <i class="fas fa-pen"></i>
+                    <i class="fas fa-pen" onclick=change_recipe()></i>
                 </p>
-                {{ message.recipe }}
+                <p id="recipe_text">
+                    {{ message.recipe }}
+                </p>
             </div>
     </div>
 </div>
@@ -28,10 +30,10 @@
     <div class="row">
         <div class="col-4 mt-4">
             <p class="text-center">Ингридиенты</p>
-            <ul class="list-group">
+            <ul class="list-group" id="ingredients_list">
                 {% for ingredient in message.ingredients %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ ingredient.name }}
+                        <span>{{ ingredient.name }}</span>
                         <span class="badge badge-primary badge-pill">{{ ingredient.quantity }}</span>
                     </li>
                 {% endfor %}
@@ -42,8 +44,48 @@
             <span class="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse molestias non repudiandae ullam. Consequatur debitis deleniti eligendi ex libero nulla perspiciatis quidem quos, repellat sapiente similique soluta, suscipit ullam voluptatum?</span>
         </div>
     </div>
-    <a href="/dishes" class="btn btn-info mt-4">
+    <a href="/dishes" class="btn btn-info mt-4" onclick=change_ingredients()>
         Назад
     </a>
 </div>
+
+<script>
+const url = window.location.pathname;
+const dish_id = url.split("/").slice(-1)[0];
+
+async function change_recipe() {
+    const recipe_element = document.getElementById("recipe_text");
+    const object = {"dish_id": dish_id, "recipe": recipe_element.innerText}
+
+    const response = await fetch(url, {
+        method: "PUT",
+        body: JSON.stringify(object)
+    });
+
+    const result = await response.json();
+    if (result["message"] !== "SUCCESS")
+        alert(result["message"]);
+}
+
+async function change_ingredients() {
+    const ingredients_element = document.getElementById("ingredients_list");
+    const items = ingredients_element.getElementsByTagName("li");
+    let ingredients = {"ingredients": [], "dish_id": dish_id};
+
+    for (let i = 0; i < items.length; i++) {
+        let spans = items[i].getElementsByTagName("span");
+        ingredients["ingredients"].push(
+            {"ingredient": spans[0].innerText, "quantity": spans[1].innerText})
+    }
+
+    const response = await fetch(url, {
+        method: "PUT",
+        body: JSON.stringify(ingredients)
+    });
+
+    const result = await response.json();
+    if (result["message"] !== "SUCCESS")
+        alert(result["message"]);
+}
+</script>
 {% endblock %}

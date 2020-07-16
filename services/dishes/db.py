@@ -8,6 +8,7 @@ from sqlalchemy import (
 from services.dishes.settings import (
     DB_NAME, DB_HOST, DB_PASSWORD, DB_USERNAME
 )
+import logging
 
 METADATA = MetaData()
 DSN = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
@@ -81,7 +82,7 @@ async def insert_dish(conn, data: dict) -> int:
     return inserted_id[0]
 
 
-async def get_single_dish(conn, dish_id):
+async def get_single_dish(conn, dish_id: str) -> list:
     records = await conn.execute(
         dishes.select().where(dishes.c.id == dish_id)
     )
@@ -111,28 +112,52 @@ async def get_single_dish(conn, dish_id):
     return result
 
 
-async def delete_dish(conn, dish_id):
+async def delete_dish(conn, dish_id: str):
     await conn.execute(
         dishes.delete().where(dishes.c.id == dish_id)
     )
 
 
-async def update_dish(conn, data: dict):
+async def update_dish_details(conn, data: dict):
     dish_id = data.pop("dish_id", -1)
-    await conn.execute(
-        dishes.update()
-            .where(dishes.c.id == dish_id)
-            .values(**data)
-    )
+
+    transaction = await conn.begin()
+    try:
+        await conn.execute(
+            dishes.update()
+                .where(dishes.c.id == dish_id)
+                .values(**data)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+        await transaction.rollback()
+        return "FAIL"
+    else:
+        await transaction.commit()
+        return "SUCCESS"
 
 
-async def update_recipe(conn, data: dict):
+async def update_dish_ingredients(conn, data: dict):
     dish_id = data.pop("dish_id", -1)
-    await conn.execute(
-        dishes_ingredients.update()
-            .where(dishes_ingredients.c.dish_id == dishes.c.id)
-            .where(dishes_ingredients.c.ingredient_id == ingredients.c.id)
-            .where(dishes.c.id == dish_id)
-            .where(ingredients.c.name == data["ingredient"])
-            .values(dish_id=select([dishes.c.id]).where(dishes.c.name == "Овсянка"))
-    )
+    ingredients_data = data.get("ingredients", [])
+
+    transaction = await conn.begin()
+    try:
+        for ingredient in ingredients_data:
+            await conn.execute(
+                dishes_ingredients.update()
+                    .where(dishes_ingredients.c.dish_id == dishes.c.id)
+                    .where(dishes_ingredients.c.ingredient_id == ingredients.c.id)
+                    .where(dishes.c.id == dish_id)
+                    .where(ingredients.c.name == ingredient["ingredient"])
+                    .values(dish_id=select([dishes.c.id]).where(dishes.c.id == dish_id),
+                            quantity=ingredient["quantity"])
+            )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+        await transaction.rollback()
+        return "FAIL"
+    else:
+        await transaction.commit()
+        return "SUCCESS"
+

@@ -27,43 +27,45 @@
 </div>
 
 <script>
-    function deleteDish(id) {
-        fetch('/dishes/' + id, {
-            method: 'DELETE',
-        })
-            .then(response => {
-                if (response.status === 200) {
-                    document.getElementById(id).remove();
-                }
-            });
-    }
+const url = window.location.pathname;
 
-    addForm.onsubmit = async (e) => {
-        e.preventDefault();
-        let data = new FormData(addForm)
-        var object = {};
-        data.forEach((value, key) => {object[key] = value});
-
-        const response = await fetch('/dishes', {
-            method: 'POST',
-            body: JSON.stringify(object)
+function deleteDish(id) {
+    fetch(url + '/' + id, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (response.status === 200) {
+                document.getElementById(id).remove();
+            }
         });
+}
 
-        let new_dish_id = await response.json();
-        var new_div = document.createElement("div");
-        new_div.innerHTML = `<div class=\"alert alert-primary col-8\">
-                        <a href=\"/dishes/${new_dish_id["message"]}\">
-                            <div>${object["name"]}</div>
-                        </a>
-                    </div>
-                    <div class=\"col-4\">
-                        <button class=\"btn btn-primary\" onclick=\"deleteDish(${new_dish_id["message"]})\">Удалить</button>
-                    </div>`
-        new_div.setAttribute("id", new_dish_id["message"]);
-        new_div.setAttribute("class", "row");
-        add_dish1 = document.getElementById("add_dish")
-        add_dish1.appendChild(new_div)
-    }
+addForm.onsubmit = async (e) => {
+    e.preventDefault();
+    let data = new FormData(addForm)
+    let object = {};
+    data.forEach((value, key) => {object[key] = value});
+
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(object)
+    });
+
+    let new_dish_id = await response.json();
+    const new_div = document.createElement("div");
+    new_div.innerHTML = `<div class=\"alert alert-primary col-8\">
+                    <a href=\"/dishes/${new_dish_id["message"]}\">
+                        <div>${object["name"]}</div>
+                    </a>
+                </div>
+                <div class=\"col-4\">
+                    <button class=\"btn btn-primary\" onclick=\"deleteDish(${new_dish_id["message"]})\">Удалить</button>
+                </div>`
+    new_div.setAttribute("id", new_dish_id["message"]);
+    new_div.setAttribute("class", "row");
+    add_dish1 = document.getElementById("add_dish")
+    add_dish1.appendChild(new_div)
+}
 
 </script>
 {% endblock %}
