@@ -51,11 +51,10 @@
 
 <script>
 const url = window.location.pathname;
-const dish_id = url.split("/").slice(-1)[0];
 
 async function change_recipe() {
     const recipe_element = document.getElementById("recipe_text");
-    const object = {"dish_id": dish_id, "recipe": recipe_element.innerText}
+    const object = {"recipe": recipe_element.innerText}
 
     const response = await fetch(url, {
         method: "PUT",
@@ -70,7 +69,7 @@ async function change_recipe() {
 async function change_ingredients() {
     const ingredients_element = document.getElementById("ingredients_list");
     const items = ingredients_element.getElementsByTagName("li");
-    let ingredients = {"ingredients": [], "dish_id": dish_id};
+    let ingredients = {"ingredients": []};
 
     for (let i = 0; i < items.length; i++) {
         let spans = items[i].getElementsByTagName("span");

@@ -25,7 +25,7 @@ database and set settings in file, specified above.
 
 ```
 pip install -r requirements.txt
-python services/__main__.py
+python services/main.py
 ```
 
 ## Project structure 
@@ -50,7 +50,7 @@ python services/__main__.py
 │   │   │   └── index.html
 │   │   └── views.py
 │   ├── __init__.py
-│   ├── __main__.py
+│   ├── main.py
 │   ├── settings.py
 │   └── tests
 │       ├── __init__.py

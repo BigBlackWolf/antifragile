@@ -41,7 +41,7 @@ class DelegateView(web.View):
 
     async def put(self):
         form = await self.request.json()
-        form = dict(form)
+        form["dish_id"] = self.request.match_info["dish_id"]
 
         async with self.request.app["db"].acquire() as conn:
             if "ingredients" in form:

@@ -3133,8 +3133,6 @@ img.rsImg {
 	max-width: none;
 }
 
-.grab-cursor { cursor:url(grab.html) 8 8, move;  }
-.grabbing-cursor{  cursor:url(grabbing.html) 8 8, move; }
 .rsNoDrag { cursor: auto; }
 
 .rsLink {
@@ -3145,7 +3143,6 @@ img.rsImg {
 	height:100%;
 	display:block;
 	z-index: 20;
-	background: url(blank.html);
 }
 
 
