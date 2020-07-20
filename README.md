@@ -57,6 +57,6 @@ python services/main.py
 │   └── tests
 │       ├── __init__.py
 │       └── tests.py
-└── test.py
+
 
 ```
