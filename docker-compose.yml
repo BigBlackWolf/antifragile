@@ -9,6 +9,8 @@ services:
     volumes:
       - ./services:/app
 
+    container_name: antifragile_web
+
     depends_on:
       - database
 
