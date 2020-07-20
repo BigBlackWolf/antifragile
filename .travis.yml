@@ -12,7 +12,7 @@ before_script:
   - docker-compose up -d
 
 script:
-  - docker exec antifragile_web pytest tests/tests.py
+  - sudo docker exec antifragile_web pytest tests/tests.py
 
 after_script:
   - docker-compose down
