@@ -13,7 +13,7 @@
 import pathlib
 
 DB_NAME = 'antifragile'
-DB_HOST = 'database'
+DB_HOST = 'localhost'
 DB_PORT = 5432
 DB_USERNAME = 'antifragile_user'
 DB_PASSWORD = 'antifragile_password'

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="add_dish" class="container">
+<div id="add_dish" class="container h-100">
     <div class="row">
         <form id="addForm" class="form-group col-8">
             <div class="input-group">
@@ -12,18 +12,32 @@
             </div>
         </form>
     </div>
-    {% for item in message %}
-    <div id="{{ item.id }}" class="row">
-        <div class="alert alert-primary col-8">
-            <a href="/dishes/{{ item.id }}">
-                <div>{{ item.name }}</div>
-            </a>
-        </div>
-        <div class="col-4">
-            <button class="btn btn-primary" onclick="deleteDish({{ item.id }})">Удалить</button>
-        </div>
+    <div class="row col-9">
+        {% for i in range(message|length)[::3] %}
+            <div class="d-flex flex-fill">
+                {% for item in message[i:i+3] %}
+                    <div class="alert alert-primary flex-fill mr-3">
+                        <a href="/dishes/{{ item.id }}">
+                            <img src="/static/default.jpg" alt="" class="img-fluid"/>
+                            <h3>{{ item.name }}</h3>
+                        </a>
+                        <hr>
+                        <div class="rating mb-3">
+                            {% for k in  range(3) %}
+                                <i class="far fa-star" alt="{{ k }}"></i>
+                            {% endfor %}
+                        </div>
+                        <div class="time mb-3">
+                            <i class="far fa-clock"></i>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary" onclick="deleteDish({{ item.id }})">Удалить</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 
 <script>

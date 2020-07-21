@@ -10,38 +10,69 @@
     </div>
 </div>
 <div class="container mt-5">
-    <div class="row">
-
-            <div class="col-4">
-                <img src="/static/default.jpg" class="img-fluid">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="thumbnail alert-primary mb-3">
+                <img src="/static/recipePhoto-03.jpg" class="img-fluid">
+                <div class=" caption">
+                    <div class="container">
+                        <div class="row" id="details">
+                            <div class="col-3 text-center my-auto h-100">
+                                Расчитано на:
+                                <br>
+                                2 людей
+                            </div>
+                            <div class="col-3 text-center my-auto">
+                                Время приготовления:
+                                <br>
+                                15 min
+                            </div>
+                            <div class="col-6 text-center my-auto">
+                                Калорийность:
+                                <br>
+                                112 kcal
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-8 alert-primary editable">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 alert-primary editable">
                 <p class="text-right">
                     <i class="fas fa-pen" onclick=change_recipe()></i>
                 </p>
                 <p id="recipe_text">
-                    {{ message.recipe }}
+                    Описание
                 </p>
             </div>
     </div>
-</div>
 
-<div class="container">
     <div class="row">
-        <div class="col-4 mt-4">
+        <div class="col-5 mt-4 alert-primary p-4">
             <p class="text-center">Ингридиенты</p>
             <ul class="list-group" id="ingredients_list">
                 {% for ingredient in message.ingredients %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span>{{ ingredient.name }}</span>
+                    <li class="list-group-item d-flex justify-content-between align-items-center mt-2">
+                        <input id="check-1" type="checkbox" name="check" value="check-1">
+						<label itemprop="ingredients" for="check-1">{{ ingredient.name }}</label>
                         <span class="badge badge-primary badge-pill">{{ ingredient.quantity }}</span>
                     </li>
                 {% endfor %}
             </ul>
         </div>
-        <div class="col-8 mt-4">
+        <div class="col-5 mt-4">
             <p class="text-center">Рецепт</p>
-            <span class="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse molestias non repudiandae ullam. Consequatur debitis deleniti eligendi ex libero nulla perspiciatis quidem quos, repellat sapiente similique soluta, suscipit ullam voluptatum?</span>
+            <span class="">{{ message.recipe }}</span>
+        </div>
+        <div class="col-2 mt-4">
+            <p class="text-center">Популярное</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-4">
+            Похожие
         </div>
     </div>
     <a href="/dishes" class="btn btn-info mt-4" onclick=change_ingredients()>
