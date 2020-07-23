@@ -1,5 +1,6 @@
 from aiopg.sa import create_engine
 from datetime import datetime
+import sqlalchemy
 from sqlalchemy import (
     Column, Integer, String, Table,
     DateTime, ForeignKey, MetaData, create_engine as cr,
@@ -17,8 +18,8 @@ dishes_ingredients = Table(
     'dishes_ingredients', METADATA,
 
     Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("dish_id", Integer, ForeignKey("dishes.id")),
-    Column("ingredient_id", Integer, ForeignKey("ingredients.id")),
+    Column("dish_id", Integer, ForeignKey("dishes.id", ondelete="CASCADE")),
+    Column("ingredient_id", Integer, ForeignKey("ingredients.id", ondelete="CASCADE")),
     Column("quantity", Integer, default=1),
 )
 
@@ -26,8 +27,8 @@ dishes_categories = Table(
     "dishes_categories", METADATA,
 
     Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("dish_id", Integer, ForeignKey("dishes.id")),
-    Column("category_id", Integer, ForeignKey("categories.id")),
+    Column("dish_id", Integer, ForeignKey("dishes.id", ondelete="CASCADE")),
+    Column("category_id", Integer, ForeignKey("categories.id", ondelete="CASCADE")),
 )
 
 dishes = Table(
@@ -63,6 +64,12 @@ async def init_db(app):
 def create_tables():
     engine = cr(DSN)
     METADATA.create_all(engine)
+    with open("init.sql", 'r') as f:
+        sql = sqlalchemy.text(f.read())
+    try:
+        engine.execute(sql)
+    except Exception as e:
+        print("Already created")
 
 
 async def get_dishes(conn):

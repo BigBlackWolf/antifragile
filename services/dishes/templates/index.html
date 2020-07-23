@@ -1,22 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="add_dish" class="container h-100">
-    <div class="row">
-        <form id="addForm" class="form-group col-8">
-            <div class="input-group">
-                <input id="name" name="name" type="text" placeholder="Название блюда" class="form-control">
-                <div class="input-group-append">
-                    <input type="submit" class="btn btn-success" value="Отправить">
-                </div>
-            </div>
-        </form>
+<div class="row">
+    <div class="col-9">
+        <img src="/static/recipePhoto-03.jpg" class="img-fluid" alt="">
     </div>
-    <div class="row col-9">
+</div>
+<div class="row mt-4" id="add_dish">
+    <div class="col-9">
         {% for i in range(message|length)[::3] %}
-            <div class="d-flex flex-fill">
+            <div class="d-flex justify-content-center">
                 {% for item in message[i:i+3] %}
-                    <div class="alert alert-primary flex-fill mr-3">
+                    <div class="alert alert-primary flex-fill mx-2">
                         <a href="/dishes/{{ item.id }}">
                             <img src="/static/default.jpg" alt="" class="img-fluid"/>
                             <h3>{{ item.name }}</h3>
@@ -37,6 +32,44 @@
                 {% endfor %}
             </div>
         {% endfor %}
+    </div>
+</div>
+<div class="row mt-4 alert alert-warning">
+    <div class="col-9">
+        <form id="addForm" class="form-group">
+            <div class="form-group">
+                <label for="dishName">Название</label>
+                <input type="text" id="dishName" placeholder="Название блюда" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="dishCategory">Категория</label>
+                <input type="text" id="dishCategory" placeholder="Категория" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="dishRecipe">Рецепт</label>
+                <textarea id="dishRecipe" placeholder="Рецепт" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="dishPhoto">Фото</label>
+                <input type="file" id="dishPhoto" placeholder="Фото" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label for="dishIngredients">Ингридиенты</label>
+                <div class="form-row alert alert-primary">
+                    <div class="col-8">
+                        <input type="text" id="dishIngredients" placeholder="Название" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <input type="text" id="dishIngredients" placeholder="Количество" class="form-control">
+                    </div>
+                    <div class="col my-auto text-right">
+                        <i class="far fa-times-circle"></i>
+                    </div>
+                </div>
+                <button class="alert alert-primary h5">Добавить Ингр</button>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
     </div>
 </div>
 

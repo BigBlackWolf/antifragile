@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/BigBlackWolf/antifragile.svg?branch=master)](https://travis-ci.org/BigBlackWolf/antifragile)
-
 ## Requirements
 
 * Python 3.7+

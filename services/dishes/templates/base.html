@@ -42,12 +42,37 @@
     <div>
         <h1 class="text-center">Dishes</h1>
     </div>
+    <div class="container-fluid alert alert-primary">
+    <div id="header-nav" class="container">
+        <div class="row">
+            <div class="my-auto col-9">
+                <nav class="navbar navbar-expand-lg">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active mr-2">
+                            <a href="/dishes" class="active nav-link h5">Главная</a>
+                        </li>
+                        <li class="nav-item mr-2">
+                            <a href="/dishes" class="nav-link h5">Добавить блюдо</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                      <input class="form-control mr-sm-2" type="search" placeholder="Название блюда">
+                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
+                    </form>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
     {% block content %}
     {% endblock %}
+</div>
 
 <div id="footer-bottom" class="p-4 mt-3 align-bottom">
 	<div class="container">
-		<div class="eight columns">© Copyright 2014 by <a href="#">Stepan Rasputny</a>. All Rights Reserved.</div>
+		<div class="eight columns">© Copyright 2014 by <a href="https://github.com/BigBlackWolf">Stepan Rasputny</a>. All Rights Reserved.</div>
 	</div>
 </div>
 
