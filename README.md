@@ -35,26 +35,28 @@ python services/main.py
 ├── Dockerfile
 ├── README.md
 ├── requirements.txt
-├── services
-│   ├── dishes
-│   │   ├── db.py
-│   │   ├── __init__.py
-│   │   ├── middlewares.py
-│   │   ├── resources
-│   │   │   └── default.jpg
-│   │   ├── routes.py
-│   │   ├── templates
-│   │   │   ├── base.html
-│   │   │   ├── delegate.html
-│   │   │   ├── error.html
-│   │   │   └── index.html
-│   │   └── views.py
-│   ├── __init__.py
-│   ├── main.py
-│   ├── settings.py
-│   └── tests
-│       ├── __init__.py
-│       └── tests.py
-
+└── services
+    ├── dishes
+    │   ├── db.py
+    │   ├── __init__.py
+    │   ├── middlewares.py
+    │   ├── resources
+    │   │   ├── default.jpg
+    │   │   └── recipePhoto-03.jpg
+    │   ├── routes.py
+    │   ├── templates
+    │   │   ├── base.html
+    │   │   ├── delegate.html
+    │   │   ├── error.html
+    │   │   ├── index-4.html
+    │   │   ├── index.html
+    │   │   ├── recipe-page-2.html
+    │   │   └── submit-recipe.html
+    │   └── views.py
+    ├── init.sql
+    ├── main.py
+    ├── settings.py
+    └── tests
+        └── tests.py
 
 ```
