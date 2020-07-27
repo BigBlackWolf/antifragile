@@ -38,35 +38,37 @@
     <div class="col-9">
         <form id="addForm" class="form-group">
             <div class="form-group">
-                <label for="dishName">Название</label>
-                <input type="text" id="dishName" placeholder="Название блюда" class="form-control">
+                <label for="dish_name">Название</label>
+                <input type="text" id="dish_name" placeholder="Название блюда" class="form-control">
             </div>
             <div class="form-group">
-                <label for="dishCategory">Категория</label>
-                <input type="text" id="dishCategory" placeholder="Категория" class="form-control">
+                <label for="dish_category">Категория</label>
+                <input type="text" id="dish_category" placeholder="Категория" class="form-control">
             </div>
             <div class="form-group">
-                <label for="dishRecipe">Рецепт</label>
-                <textarea id="dishRecipe" placeholder="Рецепт" class="form-control" rows="3"></textarea>
+                <label for="dish_recipe">Рецепт</label>
+                <textarea id="dish_recipe" placeholder="Рецепт" class="form-control" rows="3"></textarea>
             </div>
             <div class="form-group">
-                <label for="dishPhoto">Фото</label>
-                <input type="file" id="dishPhoto" placeholder="Фото" class="form-control-file">
+                <label for="dish_photo">Фото</label>
+                <input type="file" id="dish_photo" placeholder="Фото" class="form-control-file">
             </div>
             <div class="form-group">
-                <label for="dishIngredients">Ингридиенты</label>
-                <div class="form-row alert alert-primary">
-                    <div class="col-8">
-                        <input type="text" id="dishIngredients" placeholder="Название" class="form-control">
-                    </div>
-                    <div class="col-3">
-                        <input type="text" id="dishIngredients" placeholder="Количество" class="form-control">
-                    </div>
-                    <div class="col my-auto text-right">
-                        <i class="far fa-times-circle"></i>
-                    </div>
-                </div>
-                <button class="alert alert-primary h5">Добавить Ингр</button>
+                <label for="dish_ingredients">Ингридиенты</label>
+                <ul id="dish_ingredients" class="list-group">
+                    <li class="form-row alert alert-primary">
+                        <div class="col-8">
+                            <input type="text" placeholder="Название" class="form-control">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" placeholder="Количество" class="form-control">
+                        </div>
+                        <div class="col my-auto text-right">
+                            <i class="far fa-times-circle"></i>
+                        </div>
+                    </li>
+                </ul>
+                <button id="addIngredient" type="button" class="alert alert-primary h5">Добавить Ингр</button>
             </div>
             <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
@@ -89,9 +91,20 @@ function deleteDish(id) {
 
 addForm.onsubmit = async (e) => {
     e.preventDefault();
-    let data = new FormData(addForm)
     let object = {};
-    data.forEach((value, key) => {object[key] = value});
+    const formDataCustom = addForm.getElementsByClassName("form-group");
+    for (let i = 0; i++; i < formDataCustom.length) {
+        let input_ul = formDataCustom[i].children[1];
+
+    }
+
+    {#const ingredients = document.getElementById("dish_ingredients");#}
+    {#const list = ingredients.getElementsByTagName("li");#}
+    {#const ingrs = {};#}
+    {#for (let i = 0; i < list.length; i++) {#}
+    {#    let valuev = list[i].getElementsByTagName("div");#}
+    {#    ingrs[valuev[0].children[0].value] = ingrs[valuev[1].children[0].value];#}
+    {#}#}
 
     const response = await fetch(url, {
         method: 'POST',
@@ -112,6 +125,22 @@ addForm.onsubmit = async (e) => {
     new_div.setAttribute("class", "row");
     add_dish1 = document.getElementById("add_dish")
     add_dish1.appendChild(new_div)
+}
+
+addIngredient.onclick = () => {
+    const ingredients = document.getElementById("ingredientsList");
+    let new_elem = document.createElement("li");
+    new_elem.setAttribute("class", "form-row alert alert-primary")
+    new_elem.innerHTML = `<div class="col-8">
+                            <input type="text" placeholder="Название" class="form-control">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" placeholder="Количество" class="form-control">
+                        </div>
+                        <div class="col my-auto text-right">
+                            <i class="far fa-times-circle"></i>
+                        </div>`
+    ingredients.appendChild(new_elem);
 }
 
 </script>
