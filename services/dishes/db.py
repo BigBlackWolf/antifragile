@@ -72,35 +72,97 @@ def create_tables():
         print("Already created")
 
 
-async def get_dishes(conn):
-    records = await conn.execute(
-        dishes.select().order_by(dishes.c.timestamp)
-    )
+async def get_dishes(conn) -> list:
+    try:
+        records = await conn.execute(
+            dishes.select().order_by(dishes.c.timestamp)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+        return []
     fetched = await records.fetchall()
     result = list(map(lambda x: {"name": x[1], "id": x[0]}, fetched))
     return result
 
 
+async def get_categories(conn) -> list:
+    try:
+        result = await conn.execute(
+            select([categories.c.name]).order_by(categories.c.name)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+        return []
+    else:
+        result = await result.fetchall()
+        return [i[0] for i in result]
+
+
+async def get_ingredients(conn) -> list:
+    try:
+        result = await conn.execute(
+            select([ingredients.c.name]).order_by(ingredients.c.name)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+        return []
+    else:
+        result = await result.fetchall()
+        return [i[0] for i in result]
+
+
 async def insert_dish(conn, data: dict) -> int:
-    result = await conn.execute(
-        dishes.insert().values(**data).returning(dishes.c.id)
-    )
+    category = data.pop("category", "")
+    ingredients = data.pop("ingredients", "")
+    try:
+        result = await conn.execute(
+            dishes.insert().values(**data).returning(dishes.c.id)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
     inserted_id = await result.fetchone()
-    return inserted_id[0]
+    dish_id = inserted_id[0]
+    return dish_id
+
+
+async def insert_categories(conn, categories_list: list):
+    try:
+        await conn.execute(
+            categories.insert().values(*categories_list)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+
+
+async def insert_ingredients(conn, ingredients_list: list):
+    try:
+        await conn.execute(
+            categories.insert().values(*ingredients_list)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
 
 
 async def get_single_dish(conn, dish_id: str) -> list:
-    records = await conn.execute(
-        dishes.select().where(dishes.c.id == dish_id)
-    )
+    try:
+        records = await conn.execute(
+            dishes.select().where(dishes.c.id == dish_id)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+        return []
     fetched = await records.fetchall()
-    ingrs = await conn.execute(
-        select([dishes.c.id, ingredients.c.name,
-                dishes_ingredients.c.quantity
-                ]).select_from(dishes_ingredients
-                               .join(dishes)
-                               .join(ingredients)
-                               ).where(dishes.c.id == dish_id))
+    try:
+        ingrs = await conn.execute(
+            select([dishes.c.id, ingredients.c.name,
+                    dishes_ingredients.c.quantity
+                    ]).select_from(dishes_ingredients
+                                   .join(dishes)
+                                   .join(ingredients)
+                                   ).where(dishes.c.id == dish_id))
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
+        return []
     ingrs_fetched = await ingrs.fetchall()
     ing = {}
     for i in ingrs_fetched:
@@ -120,9 +182,12 @@ async def get_single_dish(conn, dish_id: str) -> list:
 
 
 async def delete_dish(conn, dish_id: str):
-    await conn.execute(
-        dishes.delete().where(dishes.c.id == dish_id)
-    )
+    try:
+        await conn.execute(
+            dishes.delete().where(dishes.c.id == dish_id)
+        )
+    except Exception as e:
+        logging.error("ERROR >>>>>> {}".format(e))
 
 
 async def update_dish_details(conn, data: dict):

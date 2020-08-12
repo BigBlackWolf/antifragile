@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row mt-4 alert alert-warning">
+    <div class="col-9">
+        <form id="addForm" class="form-group">
+            <div class="form-group">
+                <label for="categories">Категории</label>
+                <ul id="categories" class="list-group">
+                    <li class="form-row alert alert-primary">
+                        <div class="col-11">
+                            <input type="text" placeholder="Название" class="form-control">
+                        </div>
+                        <div class="col-1 my-auto text-right">
+                            <i class="far fa-times-circle" onclick="destroy_object(this)"></i>
+                        </div>
+                    </li>
+                </ul>
+                <button id="addCategory" type="button" class="alert alert-primary h5">Добавить Категорию</button>
+            </div>
+            <div class="form-group">
+                <label for="ingredients">Ингридиенты</label>
+                <ul id="ingredients" class="list-group">
+                    <li class="form-row alert alert-primary">
+                        <div class="col-11">
+                            <input type="text" placeholder="Название" class="form-control">
+                        </div>
+                        <div class="col-1 my-auto text-right">
+                            <i class="far fa-times-circle" onclick="destroy_object(this)"></i>
+                        </div>
+                    </li>
+                </ul>
+                <button id="addIngredient" type="button" class="alert alert-primary h5">Добавить Ингр</button>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+const url = window.location.pathname;
+
+function destroy_object(item) {
+    item.parentElement.parentElement.remove();
+}
+
+addForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const object = {"ingredients": [], "categories": []};
+    const formDataCustom = addForm.getElementsByClassName("form-group");
+    for (let i = 0; i < formDataCustom.length; i++) {
+        let key = formDataCustom[i].children[0].getAttribute("for")
+        let input = formDataCustom[i].children[1];
+        const elements = input.getElementsByTagName("li");
+        let name;
+        for (let j = 0; j < elements.length; j++) {
+            name = elements[j].getElementsByTagName("div")[0].getElementsByTagName("input")[0].value
+            object[key].push({"name": name})
+        }
+    }
+
+    await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(object)
+    }).then(response => {
+       if (response.status === 200)
+           document.location.pathname = "/dishes"
+    });
+}
+
+addIngredient.onclick = () => {
+    const ingredients = document.getElementById("ingredients");
+    let new_elem = document.createElement("li");
+    new_elem.setAttribute("class", "form-row alert alert-primary")
+    new_elem.innerHTML = `<div class="col-11">
+                            <input type="text" placeholder="Название" class="form-control">
+                        </div>
+                        <div class="col-1 my-auto text-right">
+                            <i class="far fa-times-circle" onclick="destroy_object(this)"></i>
+                        </div>`
+    ingredients.appendChild(new_elem);
+}
+
+addCategory.onclick = () => {
+    const ingredients = document.getElementById("categories");
+    let new_elem = document.createElement("li");
+    new_elem.setAttribute("class", "form-row alert alert-primary")
+    new_elem.innerHTML = `<div class="col-11">
+                            <input type="text" placeholder="Название" class="form-control">
+                        </div>
+                        <div class="col-1 my-auto text-right">
+                            <i class="far fa-times-circle" onclick="destroy_object(this)"></i>
+                        </div>`
+    ingredients.appendChild(new_elem);
+}
+
+</script>
+
+{% endblock %}

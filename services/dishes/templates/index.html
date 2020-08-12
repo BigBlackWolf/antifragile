@@ -6,12 +6,12 @@
         <img src="/static/recipePhoto-03.jpg" class="img-fluid" alt="">
     </div>
 </div>
-<div class="row mt-4" id="add_dish">
-    <div class="col-9">
+<div class="row mt-4">
+    <div class="col-9" id="add_dish">
         {% for i in range(message|length)[::3] %}
             <div class="d-flex justify-content-center">
                 {% for item in message[i:i+3] %}
-                    <div class="alert alert-primary flex-fill mx-2">
+                    <div id="{{ item.id }}" class="alert alert-primary flex-fill mx-2">
                         <a href="/dishes/{{ item.id }}">
                             <img src="/static/default.jpg" alt="" class="img-fluid"/>
                             <h3>{{ item.name }}</h3>
@@ -34,46 +34,6 @@
         {% endfor %}
     </div>
 </div>
-<div class="row mt-4 alert alert-warning">
-    <div class="col-9">
-        <form id="addForm" class="form-group">
-            <div class="form-group">
-                <label for="dish_name">Название</label>
-                <input type="text" id="dish_name" placeholder="Название блюда" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="dish_category">Категория</label>
-                <input type="text" id="dish_category" placeholder="Категория" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="dish_recipe">Рецепт</label>
-                <textarea id="dish_recipe" placeholder="Рецепт" class="form-control" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="dish_photo">Фото</label>
-                <input type="file" id="dish_photo" placeholder="Фото" class="form-control-file">
-            </div>
-            <div class="form-group">
-                <label for="dish_ingredients">Ингридиенты</label>
-                <ul id="dish_ingredients" class="list-group">
-                    <li class="form-row alert alert-primary">
-                        <div class="col-8">
-                            <input type="text" placeholder="Название" class="form-control">
-                        </div>
-                        <div class="col-3">
-                            <input type="text" placeholder="Количество" class="form-control">
-                        </div>
-                        <div class="col my-auto text-right">
-                            <i class="far fa-times-circle"></i>
-                        </div>
-                    </li>
-                </ul>
-                <button id="addIngredient" type="button" class="alert alert-primary h5">Добавить Ингр</button>
-            </div>
-            <button type="submit" class="btn btn-primary">Добавить</button>
-    </form>
-    </div>
-</div>
 
 <script>
 const url = window.location.pathname;
@@ -88,60 +48,5 @@ function deleteDish(id) {
             }
         });
 }
-
-addForm.onsubmit = async (e) => {
-    e.preventDefault();
-    let object = {};
-    const formDataCustom = addForm.getElementsByClassName("form-group");
-    for (let i = 0; i++; i < formDataCustom.length) {
-        let input_ul = formDataCustom[i].children[1];
-
-    }
-
-    {#const ingredients = document.getElementById("dish_ingredients");#}
-    {#const list = ingredients.getElementsByTagName("li");#}
-    {#const ingrs = {};#}
-    {#for (let i = 0; i < list.length; i++) {#}
-    {#    let valuev = list[i].getElementsByTagName("div");#}
-    {#    ingrs[valuev[0].children[0].value] = ingrs[valuev[1].children[0].value];#}
-    {#}#}
-
-    const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(object)
-    });
-
-    let new_dish_id = await response.json();
-    const new_div = document.createElement("div");
-    new_div.innerHTML = `<div class=\"alert alert-primary col-8\">
-                    <a href=\"/dishes/${new_dish_id["message"]}\">
-                        <div>${object["name"]}</div>
-                    </a>
-                </div>
-                <div class=\"col-4\">
-                    <button class=\"btn btn-primary\" onclick=\"deleteDish(${new_dish_id["message"]})\">Удалить</button>
-                </div>`
-    new_div.setAttribute("id", new_dish_id["message"]);
-    new_div.setAttribute("class", "row");
-    add_dish1 = document.getElementById("add_dish")
-    add_dish1.appendChild(new_div)
-}
-
-addIngredient.onclick = () => {
-    const ingredients = document.getElementById("ingredientsList");
-    let new_elem = document.createElement("li");
-    new_elem.setAttribute("class", "form-row alert alert-primary")
-    new_elem.innerHTML = `<div class="col-8">
-                            <input type="text" placeholder="Название" class="form-control">
-                        </div>
-                        <div class="col-3">
-                            <input type="text" placeholder="Количество" class="form-control">
-                        </div>
-                        <div class="col my-auto text-right">
-                            <i class="far fa-times-circle"></i>
-                        </div>`
-    ingredients.appendChild(new_elem);
-}
-
 </script>
 {% endblock %}

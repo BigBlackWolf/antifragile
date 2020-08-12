@@ -9,14 +9,9 @@ class IndexView(web.View):
     async def get(self):
         async with self.request.app["db"].acquire() as conn:
             dishes = await db.get_dishes(conn)
-            return {"message": dishes}
-
-    async def post(self):
-        form = await self.request.json()
-        form = dict(form)
-        async with self.request.app["db"].acquire() as conn:
-            new_dish_id = await db.insert_dish(conn, form)
-        return web.json_response({"message": str(new_dish_id)})
+            categories = await db.get_categories(conn)
+            ingredients = await db.get_ingredients(conn)
+        return {"message": dishes}
 
 
 @aiohttp_jinja2.template("delegate.html")
@@ -29,9 +24,6 @@ class DelegateView(web.View):
             query = await db.get_single_dish(conn, dish_id)
             dish = query[0] if len(query) > 0 else {}
             return {"message": dish}
-
-    async def post(self):
-        pass
 
     async def delete(self):
         dish_id = int(self.request.path.split("/")[-1])
@@ -49,3 +41,37 @@ class DelegateView(web.View):
             else:
                 new_dish_id = await db.update_dish_details(conn, form)
         return web.json_response({"message": str(new_dish_id)})
+
+
+@aiohttp_jinja2.template("submit-recipe.html")
+class AddDishView(web.View):
+    async def get(self):
+        async with self.request.app["db"].acquire() as conn:
+            categories = await db.get_categories(conn)
+            ingredients = await db.get_ingredients(conn)
+        return {"categories": categories, "ingredients": ingredients}
+
+    async def post(self):
+        form = await self.request.json()
+        form = dict(form)
+        async with self.request.app["db"].acquire() as conn:
+            new_dish_id = await db.insert_dish(conn, form)
+        return web.json_response({"message": str(new_dish_id)})
+
+
+class SettingsView(web.View):
+    @aiohttp_jinja2.template("settings.html")
+    async def get(self):
+        async with self.request.app["db"].acquire() as conn:
+            categories = await db.get_categories(conn)
+            ingredients = await db.get_ingredients(conn)
+        return {"categories": categories, "ingredients": ingredients}
+
+    async def post(self):
+        form = await self.request.json()
+        categories = form["categories"]
+        ingredients = form["ingredients"]
+        async with self.request.app["db"].acquire() as conn:
+            await db.insert_categories(conn, categories)
+            await db.insert_ingredients(conn, ingredients)
+        return web.json_response({"message": "DONE"})
