@@ -81,12 +81,14 @@ addForm.onsubmit = async (e) => {
             const elements = input.getElementsByTagName("li");
             let name, quantity, ingredient = {};
             for (let j = 0; j < elements.length; j++) {
-                // TODO: fix here
-                name = elements[j].getElementsByTagName("div")[0].children[0].children[0].value
-                quantity = elements[j].getElementsByTagName("div")[1].children[0]
-                ingredient[name] = quantity
+                name = elements[j].getElementsByTagName("div")[0].children[0].children[0].textContent
+                quantity = elements[j].getElementsByTagName("div")[2].children[0].value
+                ingredient[name] = parseInt(quantity)
                 object["ingredients"].push(ingredient)
+                ingredient = {}
             }
+        } else if (key === "category") {
+            object["category"] = input.children[0].children[0].innerHTML
         } else
             object[key] = input.value
     }
