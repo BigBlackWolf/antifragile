@@ -72,6 +72,5 @@ class SettingsView(web.View):
         categories = form["categories"]
         ingredients = form["ingredients"]
         async with self.request.app["db"].acquire() as conn:
-            await db.insert_categories(conn, categories)
-            await db.insert_ingredients(conn, ingredients)
+            await db.insert_categories(conn, categories, ingredients)
         return web.json_response({"message": "DONE"})
