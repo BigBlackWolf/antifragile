@@ -64,6 +64,8 @@ async def init_db(app):
 def create_tables():
     engine = cr(DSN)
     METADATA.create_all(engine)
+    import os
+    print(os.getcwd())
     with open("init.sql", 'r') as f:
         sql = sqlalchemy.text(f.read())
     try:
