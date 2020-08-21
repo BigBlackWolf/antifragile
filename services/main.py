@@ -7,6 +7,11 @@ from dishes.db import init_db, create_tables
 from dishes.middlewares import handle_error
 from aiohttp.web_middlewares import normalize_path_middleware
 from settings import APP_HOST, APP_PORT
+import sys
+import asyncio
+
+if sys.platform == 'win32':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 async def init_app():
@@ -31,6 +36,4 @@ def main():
 
 
 if __name__ == '__main__':
-    import sys
-    print(sys.path)
     main()

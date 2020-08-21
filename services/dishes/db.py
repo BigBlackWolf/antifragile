@@ -66,7 +66,7 @@ def create_tables():
     METADATA.create_all(engine)
     import os
     print(os.getcwd())
-    with open("init.sql", 'r') as f:
+    with open("services/init.sql", 'r') as f:
         sql = sqlalchemy.text(f.read())
     try:
         engine.execute(sql)
