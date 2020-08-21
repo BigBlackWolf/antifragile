@@ -12,7 +12,7 @@ from settings import (
 import logging
 
 METADATA = MetaData()
-DSN = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+DSN = "postgres://knooejhchvacqp:6243dcb6bed248fc29c3b45028c0a9ab571202f7c5978b1008132610aeaf51a4@ec2-54-247-78-30.eu-west-1.compute.amazonaws.com:5432/d3j96te1p86pgb"
 
 dishes_ingredients = Table(
     'dishes_ingredients', METADATA,
