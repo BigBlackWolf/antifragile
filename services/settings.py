@@ -14,7 +14,7 @@
 import pathlib
 
 DB_NAME = 'antifragile'
-DB_HOST = 'database'
+DB_HOST = 'antifragile-cookbook.herokuapp.com'
 DB_PORT = 5432
 DB_USERNAME = 'antifragile_user'
 DB_PASSWORD = 'antifragile_password'
