@@ -6,13 +6,11 @@ from sqlalchemy import (
     DateTime, ForeignKey, MetaData, create_engine as cr,
     select
 )
-from settings import (
-    DB_NAME, DB_HOST, DB_PASSWORD, DB_USERNAME
-)
 import logging
+import os
 
 METADATA = MetaData()
-DSN = "postgres://knooejhchvacqp:6243dcb6bed248fc29c3b45028c0a9ab571202f7c5978b1008132610aeaf51a4@ec2-54-247-78-30.eu-west-1.compute.amazonaws.com:5432/d3j96te1p86pgb"
+DSN = os.environ.get("DATABASE_URL")
 
 dishes_ingredients = Table(
     'dishes_ingredients', METADATA,

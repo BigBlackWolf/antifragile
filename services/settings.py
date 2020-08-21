@@ -13,11 +13,11 @@
 # drop table dishes, dishes_ingredients,ingredients cascade;
 import pathlib
 
-DB_NAME = 'd3j96te1p86pgb'
-DB_HOST = 'ec2-54-247-78-30.eu-west-1.compute.amazonaws.com'
+DB_NAME = 'antifragile'
+DB_HOST = 'database'
 DB_PORT = 5432
-DB_USERNAME = 'knooejhchvacqp'
-DB_PASSWORD = '6243dcb6bed248fc29c3b45028c0a9ab571202f7c5978b1008132610aeaf51a4'
+DB_USERNAME = 'antifragile_user'
+DB_PASSWORD = 'antifragile_password'
 APP_HOST = 'https://antifragile-cookbook.herokuapp.com/'
 APP_PORT = 8080
 ROOT_FOLDER = pathlib.Path(__file__).parent.parent
