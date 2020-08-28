@@ -6,13 +6,11 @@ from sqlalchemy import (
     DateTime, ForeignKey, MetaData, create_engine as cr,
     select
 )
-from settings import (
-    DB_NAME, DB_HOST, DB_PASSWORD, DB_USERNAME
-)
 import logging
+import os
 
 METADATA = MetaData()
-DSN = f"postgresql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+DSN = os.environ.get("DATABASE_URL")
 
 dishes_ingredients = Table(
     'dishes_ingredients', METADATA,
@@ -64,7 +62,9 @@ async def init_db(app):
 def create_tables():
     engine = cr(DSN)
     METADATA.create_all(engine)
-    with open("init.sql", 'r') as f:
+    import os
+    print(os.getcwd())
+    with open("services/init.sql", 'r') as f:
         sql = sqlalchemy.text(f.read())
     try:
         engine.execute(sql)
@@ -88,27 +88,27 @@ async def get_dishes(conn) -> list:
 async def get_categories(conn) -> list:
     try:
         result = await conn.execute(
-            select([categories.c.name]).order_by(categories.c.name)
+            select([categories.c.id, categories.c.name]).order_by(categories.c.name)
         )
     except Exception as e:
         logging.error("ERROR >>>>>> {}".format(e))
         return []
     else:
         result = await result.fetchall()
-        return [i[0] for i in result]
+        return [{"name": i[1], "id": i[0]} for i in result]
 
 
 async def get_ingredients(conn) -> list:
     try:
         result = await conn.execute(
-            select([ingredients.c.name]).order_by(ingredients.c.name)
+            select([ingredients.c.id, ingredients.c.name]).order_by(ingredients.c.name)
         )
     except Exception as e:
         logging.error("ERROR >>>>>> {}".format(e))
         return []
     else:
         result = await result.fetchall()
-        return [i[0] for i in result]
+        return [{"name": i[1], "id": i[0]} for i in result]
 
 
 async def insert_dish(conn, data: dict) -> int:
@@ -118,29 +118,38 @@ async def insert_dish(conn, data: dict) -> int:
         result = await conn.execute(
             dishes.insert().values(**data).returning(dishes.c.id)
         )
+        inserted_id = await result.fetchone()
+        dish_id = inserted_id[0]
+        await conn.execute(
+            dishes_categories.insert().values(dish_id=dish_id, category_id=category)
+        )
+        await conn.execute(
+            dishes_ingredients.insert().values([
+                {
+                    "dish_id": dish_id,
+                    "ingredient_id": ingredient[0],
+                    "quantity": ingredient[1]
+                } for ingredient in ingredients
+            ])
+        )
     except Exception as e:
         logging.error("ERROR >>>>>> {}".format(e))
-    inserted_id = await result.fetchone()
-    dish_id = inserted_id[0]
-    return dish_id
+    else:
+        return dish_id
 
 
-async def insert_categories(conn, categories_list: list):
+async def insert_categories(conn, categories_list: list, ingredients_list: list):
     try:
         await conn.execute(
             categories.insert().values(*categories_list)
         )
-    except Exception as e:
-        logging.error("ERROR >>>>>> {}".format(e))
-
-
-async def insert_ingredients(conn, ingredients_list: list):
-    try:
         await conn.execute(
-            categories.insert().values(*ingredients_list)
+            ingredients.insert().values(*ingredients_list)
         )
     except Exception as e:
         logging.error("ERROR >>>>>> {}".format(e))
+    else:
+        print("Inserted categories")
 
 
 async def get_single_dish(conn, dish_id: str) -> list:

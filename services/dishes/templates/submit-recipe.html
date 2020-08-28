@@ -17,7 +17,7 @@
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       {% for category in categories %}
-                        <a class="dropdown-item" data-target="#" onclick="choose(this)">{{ category }}</a>
+                        <a id="{{ category.id }}" class="dropdown-item" data-target="#" onclick="choose(this)">{{ category.name }}</a>
                       {% endfor %}
                   </div>
                 </div>
@@ -40,7 +40,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 {% for ingredient in ingredients %}
-                                    <a class="dropdown-item" data-target="#" onclick="choose(this)">{{ ingredient }}</a>
+                                    <a id="{{ ingredient.id }}" class="dropdown-item" data-target="#" onclick="choose(this)">{{ ingredient.name }}</a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -67,7 +67,8 @@ function destroy_object(item) {
 }
 
 function choose(item) {
-    item.parentElement.parentElement.children[0].children[0].textContent = item.innerHTML
+    item.parentElement.parentElement.children[0].children[0].textContent = item.innerHTML;
+    item.parentElement.parentElement.children[0].children[0].setAttribute("test_id", item.getAttribute("id"));
 }
 
 addForm.onsubmit = async (e) => {
@@ -79,16 +80,19 @@ addForm.onsubmit = async (e) => {
         let input = formDataCustom[i].children[1];
         if (key === "ingredients") {
             const elements = input.getElementsByTagName("li");
-            let name, quantity, ingredient = {};
+            let ingredient_id, quantity;
             for (let j = 0; j < elements.length; j++) {
-                name = elements[j].getElementsByTagName("div")[0].children[0].children[0].textContent
+                let ingredient = [];
+                ingredient_id = elements[j].getElementsByTagName("div")[0].children[0].children[0].getAttribute("test_id")
                 quantity = elements[j].getElementsByTagName("div")[2].children[0].value
-                ingredient[name] = parseInt(quantity)
+                ingredient.push(ingredient_id);
+                ingredient.push(parseInt(quantity));
                 object["ingredients"].push(ingredient)
+                console.log(quantity);
                 ingredient = {}
             }
         } else if (key === "category") {
-            object["category"] = input.children[0].children[0].innerHTML
+            object["category"] = parseInt(input.children[0].children[0].getAttribute("test_id"));
         } else
             object[key] = input.value
     }
